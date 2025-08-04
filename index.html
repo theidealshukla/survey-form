@@ -228,6 +228,18 @@
     const npsScore = parseInt(document.getElementById("s-nps").value);
     const feedback = document.getElementById("s-feedback").value;
 
+    // Log the data being sent
+    console.log('Submitting survey data:', {
+      name,
+      email,
+      quality,
+      ease,
+      recommend,
+      npsScore,
+      feedback,
+      createdAt: new Date()
+    });
+
     db.collection("surveys").add({
       name,
       email,
@@ -238,9 +250,12 @@
       feedback,
       createdAt: new Date()
     }).then(() => {
+      console.log('Survey successfully saved to database');
       document.getElementById("surveyBox").style.display = "none";
-      document.getElementById("ticketInfo").innerText = ""; // No ticket for survey
+      document.getElementById("ticketInfo").innerText = "";
       document.getElementById("thankYouBox").style.display = "block";
+    }).catch(error => {
+      console.error('Error saving survey:', error);
     });
   });
 
@@ -265,7 +280,7 @@
     });
 
     // Send email via EmailJS
-    emailjs.send("service_7y35doh", "template_ypnghxy", {
+    emailjs.send("service_7y35doh", "template_wd9zc0z", {
       to_name: name,
       to_email: email,
       message: message,
