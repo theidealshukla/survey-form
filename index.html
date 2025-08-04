@@ -228,34 +228,32 @@
     const npsScore = parseInt(document.getElementById("s-nps").value);
     const feedback = document.getElementById("s-feedback").value;
 
-    // Log the data being sent
-    console.log('Submitting survey data:', {
-      name,
-      email,
-      quality,
-      ease,
-      recommend,
-      npsScore,
-      feedback,
-      createdAt: new Date()
-    });
-
+    // Save to Firestore
     db.collection("surveys").add({
-      name,
-      email,
-      quality,
-      ease,
-      recommend,
-      npsScore,
-      feedback,
-      createdAt: new Date()
+        name,
+        email,
+        quality,
+        ease,
+        recommend,
+        npsScore,
+        feedback,
+        createdAt: new Date()
     }).then(() => {
-      console.log('Survey successfully saved to database');
-      document.getElementById("surveyBox").style.display = "none";
-      document.getElementById("ticketInfo").innerText = "";
-      document.getElementById("thankYouBox").style.display = "block";
+        // Send thank you email
+        return emailjs.send("service_7y35doh", "template_vovkzmk", {
+            to_name: name,
+            to_email: email,
+            subject: "Thank you for your feedback",
+            message: "We greatly appreciate you taking the time to share your feedback with us. Your insights help us improve our services and provide a better experience for all our users."
+        });
+    }).then(() => {
+        console.log('Survey saved and thank you email sent');
+        document.getElementById("surveyBox").style.display = "none";
+        document.getElementById("ticketInfo").innerText = "Thank you for sharing your valuable feedback!";
+        document.getElementById("thankYouBox").style.display = "block";
     }).catch(error => {
-      console.error('Error saving survey:', error);
+        console.error('Error:', error);
+        alert('There was an error submitting your survey. Please try again.');
     });
   });
 
