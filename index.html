@@ -644,13 +644,7 @@
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Complaint';
     } else {
-      // Send email notification
-      emailjs.send("service_7y35doh", "template_ypnghxy", {
-        to_name: name,
-        to_email: email,
-        message: message,
-        ticket_id: ticketId
-      }).catch(err => console.error("Email sending failed:", err));
+      // Email notification handled securely by Google Apps Script backend
 
       document.getElementById("complaintBox").style.display = "none";
       document.getElementById("ticketInfo").innerHTML = `Your Ticket ID: <strong>${ticketId}</strong>`;
