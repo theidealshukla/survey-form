@@ -549,11 +549,9 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<script src="db-config.js"></script>
 <script>
-  // Supabase Setup
-  const SUPABASE_URL = 'https://wqgaboyirihxccrzsjnn.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxZ2Fib3lpcmloeGNjcnpzam5uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcyNzA1NzAsImV4cCI6MjA3Mjg0NjU3MH0.9JOkoTP6cVZYbVD0I9BzH5Jm06t1us4xvjMcpsFNYrY';
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // DB setup loaded via db-config.js
 
   // Toast notification
   function showToast(message, type = 'info') {
@@ -605,13 +603,13 @@
       return;
     }
 
-    const { data, error } = await supabase
-      .from("surveys")
-      .insert([{ name, email, quality, ease, recommend, nps_score: npsScore, feedback }]);
+    const { error } = await DB.insertRow("Surveys", {
+      name, email, quality, ease, recommend, nps_score: npsScore, feedback
+    });
 
     if (error) {
-      console.error("Supabase error:", error);
-      showToast("Failed to submit: " + error.message, "error");
+      console.error("Database error:", error);
+      showToast("Failed to submit: " + error, "error");
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Survey';
     } else {
@@ -636,13 +634,13 @@
     const message = document.getElementById("c-msg").value;
     const ticketId = generateTicketId();
 
-    const { data, error } = await supabase
-      .from("complaints")
-      .insert([{ name, email, type, message, ticket_id: ticketId, status: "open" }]);
+    const { error } = await DB.insertRow("Complaints", {
+      name, email, type, message, ticket_id: ticketId
+    });
 
     if (error) {
-      console.error("Supabase error:", error);
-      showToast("Failed to submit: " + error.message, "error");
+      console.error("Database error:", error);
+      showToast("Failed to submit: " + error, "error");
       btn.disabled = false;
       btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Complaint';
     } else {
